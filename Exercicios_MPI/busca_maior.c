@@ -8,7 +8,7 @@ int cmpfunc (const void * a, const void * b){
 
 int main (int argc, char *argv[]) {
 	int i, my_rank, p, target, maior;
-	int nElementos = 16;
+	int nElementos = 1000;
 	MPI_Status status;
 	MPI_Init (&argc, &argv);
 	MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);

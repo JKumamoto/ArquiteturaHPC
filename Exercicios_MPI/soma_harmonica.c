@@ -3,13 +3,14 @@
 #include <mpi.h>
 
 int main (int argc, char *argv[]) {
-	int my_rank, p, target;
-	int nElementos = 10;
+	int my_rank, p;
+	long target;
+	long nElementos = 100000000000;
 	MPI_Status status;
 	MPI_Init (&argc, &argv);
 	MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);
 	MPI_Comm_size (MPI_COMM_WORLD, &p);
-	int nElemProc = nElementos / (p-1);
+	long nElemProc = nElementos / (p-1);
 	
 	double soma=0;
 	
@@ -22,12 +23,10 @@ int main (int argc, char *argv[]) {
 		}
 		printf("%f\n", soma);
 	}else{
-		int proc=(my_rank-1)*nElemProc;
-		for(target=proc; target<(proc+nElemProc); target++){
-			if(target==0)	soma=1;
-			else 	soma+=1/target;
-			printf("[%d]: %f\n", my_rank, soma);
-		}
+		long proc=(my_rank-1)*nElemProc;
+		if(proc==0)	proc++;
+		for(target=proc; target<(proc+nElemProc); target++)
+			soma+=1.0/target;
 		MPI_Send(&soma, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 	}
 
