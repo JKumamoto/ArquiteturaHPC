@@ -22,7 +22,3 @@ for:
 MOV AX, BX
 
 ret
-
-
-
-
