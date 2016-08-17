@@ -8,8 +8,8 @@ JC = javac
 
 CLASSES = \
 		Registrador.java	\
-		Operacoes.java	\
-		Maquina.java	\
+		LanguageProcessor.java 	\
+		AssemblyMachine.java	\
 		Main.java
 
 all: classes

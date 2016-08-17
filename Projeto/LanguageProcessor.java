@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Processador{
+public class LanguageProcessor{
 
 	private ArrayList<String> Programa;
 
-	public Processador(ArrayList<String> Programa){
+	public LanguageProcessor(ArrayList<String> Programa){
 		this.Programa=Programa;
 	}
 
@@ -22,10 +22,10 @@ public class Processador{
 		Scanner Processador=new Scanner(linha);
 		while(Processador.hasNext()){
 			String w=Processador.next();
-			palavras.add(w);
+			palavras.add(w.toUpperCase());
 		}
 		return palavras;
 	}
-}
 
+}
 

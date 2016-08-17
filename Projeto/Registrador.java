@@ -1,33 +1,35 @@
 public class Registrador{
 
-	private int H;
-	private int L;
+	private String Nome;
+	private int valor;
+	private boolean tipo;
 
-	public Registrador(){
-		this.H=0;
-		this.L=0;
-	}
-
-	public int getH() {
-		return H;
-	}
-	
-	public void setH(int H) {
-		this.H = H;
-	}
-	
-	public int getL() {
-		return L;
-	}
-	
-	public void setL(int L) {
-		this.L = L;
+	public Registrador(String Nome, boolean tipo){
+		this.Nome=Nome;
+		this.valor=0;
+		this.tipo=tipo;
 	}
 
-	public int getX(){
-		return H+L;
+	public String getNome(){
+		return Nome;
 	}
-	
+
+	public boolean gettipo(){
+		return tipo;
+	}
+
+	public int getvalor(){
+		return valor;
+	}
+
+	public int setvalor(int x){
+		if(x>255){
+			this.valor=255;
+			return x-255;
+		}else
+			this.valor=x;
+		return 0;
+	}
 
 }
 

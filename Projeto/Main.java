@@ -13,8 +13,7 @@ public class Main{
 			while(caminho.equals(""))
 				caminho=escolheArquivo();
 
-			File file=new File(caminho);
-			Scanner scan=new Scanner(file);
+			Scanner scan=new Scanner(new File(caminho));
 			ArrayList<String> processo=new ArrayList<String>();
 			String linha=scan.nextLine();
 			processo.add(linha);
@@ -22,8 +21,7 @@ public class Main{
 				linha=scan.nextLine();
 				processo.add(linha);
 			}
-			Maquina maq=new Maquina(processo, funcoes());
-			maq.Loop();
+			AssemblyMachine maq=new AssemblyMachine(reg());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -40,9 +38,19 @@ public class Main{
 		return path;
 	}
 
-	public static HashMap<String, Runnable> funcoes(){
-		HashMap<String, Runnable> hash=new HashMap<String, Runnable>();
-
+	public static HashMap<String, Registrador> reg(){
+		HashMap<String, Registrador> hash=new HashMap<String, Registrador>();
+		hash.put("AL", new Registrador("A", true));
+		hash.put("AH", new Registrador("A", false));
+		hash.put("BL", new Registrador("B", true));
+		hash.put("BH", new Registrador("B", false));
+		hash.put("CL", new Registrador("C", true));
+		hash.put("CH", new Registrador("C", false));
+		hash.put("DL", new Registrador("D", true));
+		hash.put("DH", new Registrador("D", false));
+		hash.put("IC", new Registrador("IC", false));
+		hash.put("CF", new Registrador("CF", false));
+		hash.put("ZF", new Registrador("ZF", false));
 		return hash;
 	}
 
