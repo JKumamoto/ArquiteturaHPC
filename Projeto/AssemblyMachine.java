@@ -4,15 +4,44 @@ import java.util.HashMap;
 public class AssemblyMachine{
 
 	private HashMap<String, Registrador> Registradores;
+	private LanguageProcessor Processor;
+	private int linhas;
+	private int[] function;
+	private int functioncounter;
 	private boolean running;
 
-	public AssemblyMachine(HashMap<String, Registrador> Registradores){
+	public AssemblyMachine(HashMap<String, Registrador> Registradores, ArrayList<String> programa){
 		this.Registradores=Registradores;
+		this.Processor=new LanguageProcessor(programa);
+		this.linhas=0;
+		this.function=new int[10];
+		for(int i=0; i<10; i++)
+			function[i]=0;
+		this.functioncounter=0;
 		this.running=true;
 	}
-	
+
+	public void Stop(){
+		this.running=false;
+	}
+
 	public boolean isrunning(){
+		if(linhas>=Processor.Max())	Stop();
 		return running;
+	}
+
+	public ArrayList<String> Next(){
+		String linha=Processor.getLinha(linhas);
+		ArrayList<String> word=Processor.ProcessaLinha(linha);
+		linhas++;
+		return word;
+	}
+
+	public int Previous(){
+		int l=0;
+		if(linhas>1)
+			l=linhas-1;
+		return l;
 	}
 
 	public int getX(String nome){
@@ -41,6 +70,15 @@ public class AssemblyMachine{
 				n=Registradores.get(val).getvalor();
 		}
 		return n;
+	}
+
+	public void ORG(String val){
+		if(val.equals("100h")||val.equals("100H")){
+			linhas=1;
+			running=true;
+			for(String h : Registradores.keySet())
+				Registradores.get(h).setvalor(0);
+		}
 	}
 
 	private int movs(String pos, int val){
@@ -119,9 +157,13 @@ public class AssemblyMachine{
 	}
 
 	public void CMP(String a, String b){
-		if(Registradores.get(a).getvalor()==getN(b))
+		int n=getN(a)-getN(b);
+		Registradores.get("SF").setvalor(0);
+		Registradores.get("ZF").setvalor(0);
+		if(n==0)
 			Registradores.get("ZF").setvalor(1);
-		else Registradores.get("ZF").setvalor(0);
+		else if(n<0)
+			Registradores.get("SF").setvalor(1);
 	}
 
 	public void INC(String a){
@@ -137,8 +179,42 @@ public class AssemblyMachine{
 		Registradores.get(a).setvalor(getN(a)*-1);
 	}
 
+	public void JMP(String label){
+		function[functioncounter++]=linhas;
+		label+=":";
+		for(int i=0; i<Processor.Max(); i++){
+			String search=Processor.getCommand(i);
+			if(search.equals(label)){
+				linhas=i+1;
+				break;
+			}
+		}
+	}
+
+	public void JZ(String label){
+		if(getN("ZF")==1)
+			JMP(label);
+	}
+
+	public void JNZ(String label){
+		if(getN("ZF")==0)
+			JMP(label);
+	}
+
+	public void JG(String label){
+		if((getN("ZF")==0)&&(getN("SF")==0))
+			JMP(label);
+	}
+
+	public void JGE(String label){
+		if(getN("SF")==0)
+			JMP(label);
+	}
+
 	public void RET(){
-		running=false;
+		if(functioncounter!=0)
+			linhas=function[--functioncounter];
+		else	Stop();
 	}
 
 }

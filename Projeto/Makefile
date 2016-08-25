@@ -10,7 +10,7 @@ CLASSES = \
 		Registrador.java	\
 		LanguageProcessor.java 	\
 		AssemblyMachine.java	\
-		Main.java
+		FormMain.java
 
 all: classes
 	@echo "Build Pronta"
@@ -18,7 +18,7 @@ all: classes
 classes: $(CLASSES:.java=.class)
 
 run:
-	java Main
+	java FormMain
 
 ###### CLEAN #####
 clean:	

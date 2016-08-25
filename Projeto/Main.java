@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 
 public class Main{
 
+	private static AssemblyMachine maquina;
+
 	public static void main(String args[]){
 		try{
 			String caminho="";
@@ -14,18 +16,81 @@ public class Main{
 				caminho=escolheArquivo();
 
 			Scanner scan=new Scanner(new File(caminho));
-			ArrayList<String> processo=new ArrayList<String>();
+			ArrayList<String> programa=new ArrayList<String>();
 			String linha=scan.nextLine();
-			processo.add(linha);
+			if(!linha.equals(""))
+				programa.add(linha);
 			while(scan.hasNext()){
 				linha=scan.nextLine();
-				processo.add(linha);
+				if(!linha.equals(""))
+					programa.add(linha);
 			}
-			AssemblyMachine maq=new AssemblyMachine(reg());
+			maquina=new AssemblyMachine(reg(), programa);
+			Loop();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		System.exit(0);
+	}
+
+	private static void Loop(){
+		Scanner scan=new Scanner(System.in);
+		if(maquina.isrunning()){
+			String n=scan.nextLine();
+			run();
+		}
+		Update();
+	}
+
+	private static void run(){
+		ArrayList<String> commands=maquina.Next();
+		try{
+			AssemblyOperations(commands);
+		}catch(IndexOutOfBoundsException e){
+			run();
+		}
+	}
+
+	private static void Update(){
+		String[] r={"AL", "AH", "BL", "BH", "CL", "CH", "DL", "DH", "IC", "CF", "ZF", "SF"};
+		for(String n : r)
+			System.out.println(n+="="+maquina.getN(n));
+	}
+	
+	private static void AssemblyOperations(ArrayList<String> commands) throws IndexOutOfBoundsException{
+		String function=commands.get(0);
+		if(function.equals("ORG"))
+			maquina.ORG(commands.get(1));
+		else if(function.equals("MOV"))
+			maquina.MOV(commands.get(1), commands.get(2));
+		else if(function.equals("ADD"))
+			maquina.ADD(commands.get(1), commands.get(2));
+		else if(function.equals("SUB"))
+			maquina.SUB(commands.get(1), commands.get(2));
+		else if(function.equals("MUL"))
+			maquina.MUL(commands.get(1));
+		else if(function.equals("DIV"))
+			maquina.DIV(commands.get(1));
+		else if(function.equals("CMP"))
+			maquina.CMP(commands.get(1), commands.get(2));
+		else if(function.equals("INC"))
+			maquina.INC(commands.get(1));
+		else if(function.equals("DEC"))
+			maquina.DEC(commands.get(1));
+		else if(function.equals("NEG"))
+			maquina.NEG(commands.get(1));
+		else if(function.equals("JMP"))
+			maquina.JMP(commands.get(1));
+		else if(function.equals("JZ"))
+			maquina.JZ(commands.get(1));
+		else if(function.equals("JNZ"))
+			maquina.JNZ(commands.get(1));
+		else if(function.equals("JG"))
+			maquina.JG(commands.get(1));
+		else if(function.equals("JGE"))
+			maquina.JGE(commands.get(1));
+		else if(function.equals("RET"))
+			maquina.RET();
 	}
 
 	public static String escolheArquivo(){
@@ -51,6 +116,7 @@ public class Main{
 		hash.put("IC", new Registrador("IC", false));
 		hash.put("CF", new Registrador("CF", false));
 		hash.put("ZF", new Registrador("ZF", false));
+		hash.put("SF", new Registrador("SF", false));
 		return hash;
 	}
 
