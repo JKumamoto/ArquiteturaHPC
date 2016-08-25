@@ -47,7 +47,6 @@ public class FormMain extends javax.swing.JFrame {
 			hash.put("ZF", new Registrador("ZF", false));
 			hash.put("SF", new Registrador("SF", false));
 			maquina=new AssemblyMachine(hash, programa);
-			System.out.println("maquina pronta");
 			Load();
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
@@ -252,10 +251,10 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_reloadActionPerformed
 
     private void previousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousActionPerformed
-		int r=maquina.Previous();
+		int r=maquina.getN("IC");
 		if(r>0){
 			maquina.ORG("100h");
-			for(int l=r-1; l>0; l--)
+			for(int l=0; l<(r-1); l++)
 				if(maquina.isrunning())
 					run();
 		}
@@ -276,6 +275,10 @@ public class FormMain extends javax.swing.JFrame {
 
 	private void run(){
 		ArrayList<String> commands=maquina.Next();
+		while(commands.size()==0)
+			commands=maquina.Next();
+		if(commands.get(0).equals("ORG"))
+			commands=maquina.Next();
 		while(commands.size()==0)
 			commands=maquina.Next();
 		System.out.println(commands.get(0));

@@ -51,13 +51,6 @@ public class AssemblyMachine{
 		return word;
 	}
 
-	public int Previous(){
-		int l=0;
-		if(linhas>1)
-			l=linhas-1;
-		return l;
-	}
-
 	public int getX(String nome){
 		return getN(nome+"L")+getN(nome+"H");
 	}
