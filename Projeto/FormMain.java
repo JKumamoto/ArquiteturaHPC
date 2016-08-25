@@ -47,6 +47,7 @@ public class FormMain extends javax.swing.JFrame {
 			hash.put("ZF", new Registrador("ZF", false));
 			hash.put("SF", new Registrador("SF", false));
 			maquina=new AssemblyMachine(hash, programa);
+			System.out.println("maquina pronta");
 			Load();
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
@@ -262,47 +263,37 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_previousActionPerformed
 
     private void nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextActionPerformed
-		if(maquina.isrunning()){
-			maquina.INC("IC");
+		if(maquina.isrunning())
 			run();
-		}
 		Update();
     }//GEN-LAST:event_nextActionPerformed
 
     private void lastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastActionPerformed
-		while(maquina.isrunning()){
-			maquina.INC("IC");
+		while(maquina.isrunning())
 			run();
-		}
 		Update();
     }//GEN-LAST:event_lastActionPerformed
 
 	private void run(){
 		ArrayList<String> commands=maquina.Next();
-		try{
-			AssemblyOperations(commands);
-		}catch(IndexOutOfBoundsException e){
-			run();
-		}
+		while(commands.size()==0)
+			commands=maquina.Next();
+		System.out.println(commands.get(0));
+		AssemblyOperations(commands);
+		maquina.INC("IC");
 	}
 
 	private void Load(){
-		while(maquina.isrunning()){
-			ArrayList<String> commands=maquina.Next();
-			if(commands.size()!=0){
-				for(String s:commands)
-					jTextArea1.append(s+" ");
-				jTextArea1.append("\n");
-			}
-		}
-		maquina.ORG("100h");
+		ArrayList<String> w=maquina.Load();
+		for(String s:w)
+			jTextArea1.append(s+"\n");
+		while(maquina.isrunning())
+			run();
 	}
 
-	private void AssemblyOperations(ArrayList<String> commands) throws IndexOutOfBoundsException{
+	private void AssemblyOperations(ArrayList<String> commands){
 		String function=commands.get(0);
-		if(function.equals("ORG"))
-			maquina.ORG(commands.get(1));
-		else if(function.equals("MOV"))
+		if(function.equals("MOV"))
 			maquina.MOV(commands.get(1), commands.get(2));
 		else if(function.equals("ADD"))
 			maquina.ADD(commands.get(1), commands.get(2));

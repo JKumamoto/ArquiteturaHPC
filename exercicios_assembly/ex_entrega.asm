@@ -5,7 +5,7 @@
 org 100h
 
 ; add your code here
-MOV AX, 38
+MOV AX, 38; teste
 MOV CX, 5
 MOV DL, 0
 MOV DH, 0

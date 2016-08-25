@@ -14,7 +14,7 @@ public class AssemblyMachine{
 		this.Registradores=Registradores;
 		this.Processor=new LanguageProcessor(programa);
 		this.linhas=0;
-		this.function=new int[10];
+		this.function=new int[256];
 		for(int i=0; i<10; i++)
 			function[i]=0;
 		this.functioncounter=0;
@@ -28,6 +28,20 @@ public class AssemblyMachine{
 	public boolean isrunning(){
 		if(linhas>=Processor.Max())	Stop();
 		return running;
+	}
+
+	public ArrayList<String> Load(){
+		ArrayList<String> linha, programa=new ArrayList<String>();
+		for(int i=0; i<Processor.Max(); i++){
+			linha=Processor.ProcessaLinha(Processor.getLinha(i));
+			if(linha.size()!=0){
+				String s="";
+				for(String w : linha)
+					s+=w+" ";
+				programa.add(s);
+			}
+		}
+		return programa;
 	}
 
 	public ArrayList<String> Next(){
@@ -73,12 +87,10 @@ public class AssemblyMachine{
 	}
 
 	public void ORG(String val){
-		if(val.equals("100h")||val.equals("100H")){
-			linhas=1;
-			running=true;
-			for(String h : Registradores.keySet())
-				Registradores.get(h).setvalor(0);
-		}
+		linhas=2;
+		running=true;
+		for(String h : Registradores.keySet())
+			Registradores.get(h).setvalor(0);
 	}
 
 	private int movs(String pos, int val){
@@ -214,7 +226,7 @@ public class AssemblyMachine{
 	public void RET(){
 		if(functioncounter!=0)
 			linhas=function[--functioncounter];
-		else	Stop();
+		Stop();
 	}
 
 }

@@ -60,6 +60,8 @@ public class LanguageProcessor{
 
 	public String getCommand(int i){
 		ArrayList<String> array=ProcessaLinha(getLinha(i));
+		if(array.size()==0)
+			return "";
 		return array.get(0);
 	}
 

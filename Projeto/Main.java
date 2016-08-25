@@ -26,7 +26,8 @@ public class Main{
 					programa.add(linha);
 			}
 			maquina=new AssemblyMachine(reg(), programa);
-			Loop();
+			while(maquina.isrunning())
+				Loop();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -35,10 +36,8 @@ public class Main{
 
 	private static void Loop(){
 		Scanner scan=new Scanner(System.in);
-		if(maquina.isrunning()){
-			String n=scan.nextLine();
-			run();
-		}
+		String n=scan.nextLine();
+		run();
 		Update();
 	}
 
